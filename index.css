@@ -4,7 +4,75 @@
     box-sizing: border-box;
 }
 body{
-    height: 1000px;
+    height: 730px;
     width: 100%;
-    background: linear-gradient(to left,lightgreen,rgb(206, 173, 230),rgb(238, 144, 188));
+    background: linear-gradient(to left,rgb(141, 202, 141),rgb(206, 173, 230),rgb(216, 177, 195),rgb(144, 193, 144));
+   
+}
+.main{
+    height: 90%;
+    width: 1320px;
+  /* background:-moz-radial-gradient(to left,rgb(164, 140, 74),rgb(51, 174, 23),rgb(110, 162, 174)); */
+ background-color: rgb(17, 17, 17);
+ color: white;
+ margin-top: 30px;
+ margin-left: 7.5%;
+ border-radius: 11px;
+ position: relative;
+ padding-top: 10px;
+}
+@property --angle{
+syntax: "<angle>"; /*  it will stop values those are know as */
+initial-value: 0deg;
+inherits: false;
+}
+.main::after,.main::before{
+  /* margin-top: -37px; */
+  /* glow effect ke liye we need to duplicate the after element */
+   --angle: 0deg;
+  top: 50%;  /*  most important thesee three lines */
+    left: 50%;
+    translate: -50% -50%;
+  content: '';
+  position:  absolute;
+  height: 100%;
+  width: 100%;
+  background-image: conic-gradient(from var(--angle),transparent 70%,rgb(92, 175, 75) ,blue,lightgreen,red);
+  /* using css variable */
+  z-index: -1;
+  padding: 5px;
+  border-radius: 12px;
+  
+ animation: 3s spin linear infinite;
+}
+@keyframes  spin {
+    from{
+      --angle:0deg;
+    }
+    to{
+  --angle:360deg;
+    }
+}
+ /* after it not working reson is that css variable not animatable now we use @property */
+.main::before{
+    filter: blur(20px);
+    
+}
+.container{
+     display: flex;
+    justify-content: center;
+    align-items: center ;
+}
+.container h1{
+    opacity: 70%;
+}
+.container h1:hover{
+ 
+    color: rgb(239, 231, 231);
+    cursor: pointer;
+    background: linear-gradient(to left,rgb(141, 202, 141),rgb(206, 173, 230),rgb(216, 177, 195),rgb(144, 193, 144),rgb(181, 36, 36)); 
+    border-color: black;
+    border-radius: 10px;
+    padding: 0px 3px 0px 3px black ;
+    margin-top: 12px;
 }
