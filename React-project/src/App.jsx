@@ -21,6 +21,16 @@
   }));
  };
 
+ function MemoryGame(){
+ const [cards,setCards]=useState("");
+ const [selectedCards,setSelectedCards]=useState("");
+ const [isDisabled,setIsDisabled]=useState(false);
+ 
+ use
+
+ }
+
+ export default MemoryGame;
 function App() {
    
 
