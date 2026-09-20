@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import "./Card.css";
 
+ 
+
+
 const PAIR_SYMBOLS = ['🍎', '🍇', '🍉', '🍐', '🥭'];
 const DIFF_SYMBOLS = ['⌛', '💣'];
 
@@ -141,7 +144,7 @@ function MemoryGame() {
       {/* Status messages */}
       {gameStatus === "lost-time" && <p className="status-msg error">⏰ Time's Up! Game Over</p>}
       {gameStatus === "lost-bomb" && <p className="status-msg error">💥 Boom! You flipped a bomb!</p>}
-      {gameStatus === "won" && <p className="status-msg success">🎉 You matched all pairs!</p>}
+      {gameStatus === "won" && <p className="status-msg-success">🎉 You matched all pairs!</p>}
 
       {gameStatus !== "playing" && (
         <button className="restart-btn" onClick={restartGame}>Play Again</button>
@@ -168,8 +171,11 @@ export default function App() {
     <div className="main">
       <div className="container">
         <h1 class="title">Memory Blast Game</h1>
-        <h2 className="titles">Test your memory. Match all 5 pairs before time ends!</h2>
-      </div>
+       </div>
+       <div className="box">
+         <h2 className="titles">Test your memory. Match all 5 pairs before time ends!</h2>
+     
+       </div>
       <MemoryGame />
     </div>
   );
