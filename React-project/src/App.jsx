@@ -67,13 +67,12 @@ function MemoryGame() {
       return;
     }
 
-    // Flip the clicked card immediately
-    const updatedCards = cards.map((c) =>
+     const updatedCards = cards.map((c) =>
       c.id === clickedCard.id ? { ...c, isFlipped: true } : c
     );
     setCards(updatedCards);
 
-    // --- CASE 1: BOMB TRIGGER ---
+    
     if (clickedCard.symbol === '💣') {
       setCards((prev)=>
         prev.map((c)=>
@@ -85,7 +84,6 @@ function MemoryGame() {
       return;
     }
 
-    // --- CASE 2: HOURGLASS TRIGGER (+5 SECONDS BONUS) ---
     if (clickedCard.symbol === '⌛') {
        setCards((prev) =>
         prev.map((c) => (c.id === clickedCard.id ? { ...c, isMatched: true, isFlipped:true } : c))
@@ -97,8 +95,7 @@ function MemoryGame() {
       return;
     }
 
-    // --- CASE 3: PAIR SYMBOL MATCHING ---
-    const newSelection = [...selectedCards, clickedCard];
+      const newSelection = [...selectedCards, clickedCard];
     setSelectedCards(newSelection);
 
     if (newSelection.length === 2) {
@@ -106,13 +103,13 @@ function MemoryGame() {
       const [first, second] = newSelection;
 
       if (first.symbol === second.symbol) {
-        // Matched pair
+         
         const matchedDeck = cards.map((c) =>
           c.symbol === first.symbol ? { ...c, isFlipped: true, isMatched: true } : c
         );
         setCards(matchedDeck);
 
-        // Check if all pairs are found
+        
         const matchedPairsCount = matchedDeck.filter(
           (c) => PAIR_SYMBOLS.includes(c.symbol) && c.isMatched
         ).length;
@@ -123,7 +120,7 @@ function MemoryGame() {
 
         resetTurn();
       } else {
-        // No match: flip back
+        
         setTimeout(() => {
           setCards((prev) =>
             prev.map((c) =>
@@ -149,10 +146,9 @@ function MemoryGame() {
         ⏳ Time Left: <span>{timeLeft}s</span>
       </div>
 
-      {/* Status messages */}
+     
       {gameStatus === "lost-time" && <p className="status-msg error">⏰ Time's Up! Game Over</p>}
-      {/* {gameStatus === "lost-bomb" && <p className="status-msg error">💥 Boom! You flipped a bomb!</p>} */}
-      {gameStatus === "won" && <p className="status-msg-success">🎉 You matched all pairs!</p>}
+       {gameStatus === "won" && <p className="status-msg-success">🎉 You matched all pairs!</p>}
 
       {gameStatus !== "playing" && (
         <button className="restart-btn" onClick={restartGame}>Play Again</button>
