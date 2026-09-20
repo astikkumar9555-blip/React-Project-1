@@ -28,37 +28,39 @@ function MemoryGame() {
   const [cards, setCards] = useState([]);
   const [selectedCards, setSelectedCards] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(50);
   const [gameStatus, setGameStatus] = useState("playing"); // "playing", "lost-time", "lost-bomb", "won"
 
   const restartGame = () => {
     setCards(createDeck());
     setSelectedCards([]);
     setIsDisabled(false);
-    setTimeLeft(30);
+    setTimeLeft(50);
     setGameStatus("playing");
   };
 
   useEffect(() => {
     restartGame();
   }, []);
+ 
+  useEffect(()=>{
+    if(timeLeft<=0 && gameStatus==="playing"){
+      setGameStatus("lost-time");
+      setIsDisabled(true);
+    }
+  },[timeLeft ,gameStatus]);
 
-  // Timer interval
   useEffect(() => {
     if (gameStatus !== "playing") return;
 
-    if (timeLeft <= 0) {
-      setGameStatus("lost-time");
-      setIsDisabled(true);
-      return;
-    }
+    
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
+    setTimeLeft((prev)=>(prev >0 ? prev-1 : 0));
+    },1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, gameStatus]);
+  }, [gameStatus]);
 
   const handleCardClick = (clickedCard) => {
     if (isDisabled || gameStatus !== "playing" || clickedCard.isFlipped || clickedCard.isMatched) {
@@ -73,19 +75,25 @@ function MemoryGame() {
 
     // --- CASE 1: BOMB TRIGGER ---
     if (clickedCard.symbol === '💣') {
-      setIsDisabled(true);
-      setTimeLeft(0);
-      setGameStatus("lost-bomb");
+      setCards((prev)=>
+        prev.map((c)=>
+          c.id === clickedCard.id ?{ ...c,isMatched: true, isFlipped: true } : c
+        )
+      );
+      
+      setTimeLeft((prev)=>Math.max(0,prev-10));
       return;
     }
 
     // --- CASE 2: HOURGLASS TRIGGER (+5 SECONDS BONUS) ---
     if (clickedCard.symbol === '⌛') {
-      setTimeLeft((prev) => prev + 5);
-      // Keep it marked as matched so it stays face-up
-      setCards((prev) =>
-        prev.map((c) => (c.id === clickedCard.id ? { ...c, isMatched: true } : c))
+       setCards((prev) =>
+        prev.map((c) => (c.id === clickedCard.id ? { ...c, isMatched: true, isFlipped:true } : c))
       );
+
+      setSelectedCards([]);
+
+      setTimeLeft((prev)=>prev+10);
       return;
     }
 
@@ -137,20 +145,21 @@ function MemoryGame() {
 
   return (
     <div className="game-container">
-      <div className={`timer-badge ${timeLeft <= 5 ? "time-low" : ""}`}>
+      <div className={`timer-badge ${timeLeft <= 10 ? "time-low" : ""}`}>
         ⏳ Time Left: <span>{timeLeft}s</span>
       </div>
 
       {/* Status messages */}
       {gameStatus === "lost-time" && <p className="status-msg error">⏰ Time's Up! Game Over</p>}
-      {gameStatus === "lost-bomb" && <p className="status-msg error">💥 Boom! You flipped a bomb!</p>}
+      {/* {gameStatus === "lost-bomb" && <p className="status-msg error">💥 Boom! You flipped a bomb!</p>} */}
       {gameStatus === "won" && <p className="status-msg-success">🎉 You matched all pairs!</p>}
 
       {gameStatus !== "playing" && (
         <button className="restart-btn" onClick={restartGame}>Play Again</button>
       )}
 
-      <div className="grid">
+   <div className="grid-main">
+        <div className="grid">
         {cards.map((card) => (
           <button
             key={card.id}
@@ -162,6 +171,7 @@ function MemoryGame() {
           </button>
         ))}
       </div>
+   </div>
     </div>
   );
 }
